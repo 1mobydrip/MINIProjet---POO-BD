@@ -4,11 +4,11 @@ public class TypeMedicament {
     private Medicament medicament;
     private String libelle;
 
-    public Medicament getMedicamentId() {
+    public Medicament getMedicament() {
         return medicament;
     }
 
-    public void setMedicamentId(Medicament medicament) {
+    public void setMedicament(Medicament medicament) {
         this.medicament = medicament;
     }
 
@@ -18,5 +18,12 @@ public class TypeMedicament {
 
     public void setLibelle(String libelle) {
         this.libelle = libelle;
+    }
+
+    public void setMedicamentId(int id) {
+        this.medicament.setId(id);
+    }
+    public int getMedicamentId() {
+        return medicament.getId();
     }
 }

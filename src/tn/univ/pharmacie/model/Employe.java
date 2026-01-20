@@ -53,4 +53,12 @@ public class Employe {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public EmployeRole getRole() {
+        return role;
+    }
+
+    public void setRole(EmployeRole role) {
+        this.role = role;
+    }
 }
