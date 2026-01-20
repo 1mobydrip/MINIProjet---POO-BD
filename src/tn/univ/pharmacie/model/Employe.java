@@ -8,7 +8,11 @@ public class Employe {
     private String password;
     private EmployeRole role;
 
-    public enum EmployeRole{}
+    public enum EmployeRole{
+        Admin,
+        Pharmacien,
+        Caissier
+    }
 
     public int getId() {
         return id;

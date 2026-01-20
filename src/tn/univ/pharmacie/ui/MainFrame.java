@@ -1,5 +1,7 @@
 package tn.univ.pharmacie.ui;
 
+import tn.univ.pharmacie.model.Employe;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
