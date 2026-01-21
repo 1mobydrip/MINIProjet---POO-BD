@@ -7,8 +7,6 @@ import java.util.List;
 
 public class FournisseurDAO {
 
-    //Ajoute un fournisseur à la base de données.
-    //Après insertion, récupère l'ID généré automatiquement et le met dans l'objet Fournisseur
     public void ajouterFournisseur(Fournisseur f) throws SQLException {
         String sql = "INSERT INTO fournisseur (nom, telephone, adresse) VALUES (?,?,?)";
         try (Connection conn = ConnexionBD.getConnection();
@@ -26,7 +24,6 @@ public class FournisseurDAO {
                     f.setId(rs.getInt(1));
                 }}}}
 
-    //Supprime un fournisseur de la base de données en utilisant son ID.
     public void supprimerFournisseur(int id) throws SQLException {
         String sql = "DELETE FROM fournisseur WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
@@ -37,7 +34,6 @@ public class FournisseurDAO {
         }
     }
 
-    // Compte le nombre total de fournisseurs présents dans la base de données
     public int compterFournisseurs() throws SQLException {
         String sql = "SELECT COUNT(*) AS total FROM fournisseur";
         try (Connection conn = ConnexionBD.getConnection();
@@ -51,7 +47,7 @@ public class FournisseurDAO {
         return 0;
     }
 
-    // Récupère la liste de tous les fournisseurs dans la base de données.
+
     public List<Fournisseur> getAllFournisseurs() throws SQLException {
         List<Fournisseur> liste = new ArrayList<>();
         String sql = "SELECT * FROM fournisseur";
@@ -71,7 +67,7 @@ public class FournisseurDAO {
         return liste;
 
     }
-    // Modifie les informations d'un fournisseur existant dans la base de données.
+
     public void modifierFournisseur(Fournisseur f) throws SQLException {
         String sql = "UPDATE fournisseur SET nom=?, telephone=?, adresse=? WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();

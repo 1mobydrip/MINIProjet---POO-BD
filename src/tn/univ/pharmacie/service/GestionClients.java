@@ -1,21 +1,23 @@
 package tn.univ.pharmacie.service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import tn.univ.pharmacie.model.Client;
+import tn.univ.pharmacie.dao.ClientDAO;
 
 public class GestionClients {
     private static List<Client> clients = new ArrayList<>();
     private static int nextId = 1;
 
-    public void ajouterClient(Client c) {
+    public void ajouterClient(Client c) throws SQLException {
         if (c == null || c.getNom() == null || c.getNom().isEmpty() || 
             c.getPrenom() == null || c.getPrenom().isEmpty()) {
             throw new IllegalArgumentException("Le nom et le prénom sont obligatoires");
         }
         
-        c.setId(nextId++);
-        clients.add(c);
+        ClientDAO dao = new ClientDAO();
+        dao.ajouterClient(c);
     }
 
     public void modifierClient(Client c) {
@@ -34,15 +36,14 @@ public class GestionClients {
         existing.setAdresse(c.getAdresse());
     }
 
-
-    public void supprimerClient(int clientId) {
+    public void supprimerClient(int clientId) throws SQLException {
         Client client = consulterClient(clientId);
         if (client == null) {
             throw new IllegalArgumentException("Client avec l'ID " + clientId + " non trouvé");
         }
-        clients.remove(client);
+        ClientDAO dao = new ClientDAO();
+        dao.supprimerClient(clientId);
     }
-
 
     public Client consulterClient(int clientId) {
         for (Client client : clients) {
@@ -53,8 +54,9 @@ public class GestionClients {
         return null;
     }
 
-
-    public List<Client> listerClients() {
-        return new ArrayList<>(clients);
+    public List<Client> listerClients() throws SQLException {
+        ClientDAO dao = new ClientDAO();
+        clients = dao.getAllClients();
+        return clients;
     }
 }

@@ -5,6 +5,7 @@ import tn.univ.pharmacie.model.Employe;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 
 public class MainFrame extends JFrame {
     private JPanel mainPanel;
@@ -12,7 +13,7 @@ public class MainFrame extends JFrame {
     private CardLayout cardLayout;
     private Employe currentUser;
 
-    public MainFrame(Employe employe) {
+    public MainFrame(Employe employe) throws SQLException {
         this.currentUser = employe;
         setTitle("Pharmacy Management System - " + employe.getNom() + " " + employe.getPrenom());
         setSize(1200, 700);
@@ -23,7 +24,7 @@ public class MainFrame extends JFrame {
         initComponents();
     }
 
-    private void initComponents() {
+    private void initComponents() throws SQLException {
         createMenuBar();
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
@@ -102,7 +103,12 @@ public class MainFrame extends JFrame {
             employe.setId(1);
             employe.setNom("Admin");
             employe.setPrenom("User");
-            MainFrame frame = new MainFrame(employe);
+            MainFrame frame = null;
+            try {
+                frame = new MainFrame(employe);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             frame.setVisible(true);
         });
     }

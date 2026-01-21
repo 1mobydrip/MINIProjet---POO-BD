@@ -3,6 +3,7 @@ package tn.univ.pharmacie.ui;
 import tn.univ.pharmacie.service.*;
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class DashboardPanel extends JPanel {
     private GestionClients gestionClients;
@@ -12,7 +13,7 @@ public class DashboardPanel extends JPanel {
     private GestionCommandes gestionCommandes;
     private GestionVentes gestionVentes;
 
-    public DashboardPanel() {
+    public DashboardPanel() throws SQLException {
         gestionClients = new GestionClients();
         gestionProduits = new GestionProduits();
         gestionStock = new GestionStock();
@@ -23,7 +24,7 @@ public class DashboardPanel extends JPanel {
         initComponents();
     }
 
-    private void initComponents() {
+    private void initComponents() throws SQLException {
         setLayout(new GridLayout(3, 2, 20, 20));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         setBackground(new Color(245, 245, 245));

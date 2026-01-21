@@ -5,6 +5,7 @@ import tn.univ.pharmacie.service.AuthService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class LoginFrame extends JFrame {
     private JTextField txtUsername;
@@ -50,10 +51,16 @@ public class LoginFrame extends JFrame {
 
         add(panel);
 
-        btnLogin.addActionListener(e -> handleLogin());
+        btnLogin.addActionListener(e -> {
+            try {
+                handleLogin();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
-    private void handleLogin() {
+    private void handleLogin() throws SQLException {
         String username = txtUsername.getText();
         String password = new String(txtPassword.getPassword());
 

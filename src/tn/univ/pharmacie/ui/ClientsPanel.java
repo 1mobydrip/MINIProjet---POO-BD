@@ -5,6 +5,7 @@ import tn.univ.pharmacie.service.GestionClients;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.List;
 
 public class ClientsPanel extends JPanel {
@@ -14,7 +15,7 @@ public class ClientsPanel extends JPanel {
     private JTextField txtNom, txtPrenom, txtTelephone, txtAdresse;
     private JButton btnAjouter, btnModifier, btnSupprimer, btnRafraichir;
 
-    public ClientsPanel() {
+    public ClientsPanel() throws SQLException {
         gestionClients = new GestionClients();
         initComponents();
         rafraichirTable();
@@ -45,7 +46,13 @@ public class ClientsPanel extends JPanel {
         btnAjouter.addActionListener(e -> ajouterClient());
         btnModifier.addActionListener(e -> modifierClient());
         btnSupprimer.addActionListener(e -> supprimerClient());
-        btnRafraichir.addActionListener(e -> rafraichirTable());
+        btnRafraichir.addActionListener(e -> {
+            try {
+                rafraichirTable();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         buttonPanel.add(btnAjouter);
         buttonPanel.add(btnModifier);
@@ -160,7 +167,7 @@ public class ClientsPanel extends JPanel {
         }
     }
 
-    private void rafraichirTable() {
+    private void rafraichirTable() throws SQLException {
         tableModel.setRowCount(0);
         List<Client> clients = gestionClients.listerClients();
         for (Client client : clients) {

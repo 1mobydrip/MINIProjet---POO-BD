@@ -1,9 +1,12 @@
 package tn.univ.pharmacie.service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import tn.univ.pharmacie.dao.FournisseurDAO;
 import tn.univ.pharmacie.model.Fournisseur;
 
 public class GestionFournisseurs {
@@ -20,9 +23,14 @@ public class GestionFournisseurs {
         if (f.getTelephone() <= 0) {
             throw new IllegalArgumentException("Le téléphone doit être valide");
         }
-        
-        f.setId(nextId++);
-        fournisseurs.add(f);
+
+        FournisseurDAO dao = new FournisseurDAO();
+        try {
+            dao.ajouterFournisseur(f);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         livraisonsReussies.put(f.getId(), 0);
         livraisonsEchouees.put(f.getId(), 0);
     }
@@ -47,8 +55,14 @@ public class GestionFournisseurs {
         if (fournisseur == null) {
             throw new IllegalArgumentException("Fournisseur avec l'ID " + fournisseurId + " non trouvé");
         }
-        
-        fournisseurs.remove(fournisseur);
+
+        FournisseurDAO dao = new FournisseurDAO();
+        try {
+            dao.supprimerFournisseur(fournisseurId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         livraisonsReussies.remove(fournisseurId);
         livraisonsEchouees.remove(fournisseurId);
     }
@@ -63,7 +77,13 @@ public class GestionFournisseurs {
     }
 
     public List<Fournisseur> listerFournisseurs() {
-        return new ArrayList<>(fournisseurs);
+        FournisseurDAO dao = new FournisseurDAO();
+        try {
+            fournisseurs = dao.getAllFournisseurs();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return fournisseurs;
     }
 
     public double calculerPerformanceFournisseur(int fournisseurId) {
@@ -109,6 +129,12 @@ public class GestionFournisseurs {
     }
 
     public int getTotalFournisseurs() {
+        FournisseurDAO dao = new FournisseurDAO();
+        try {
+            fournisseurs = dao.getAllFournisseurs();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return fournisseurs.size();
     }
 }
