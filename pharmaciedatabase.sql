@@ -109,18 +109,11 @@ CREATE TABLE vente_detail (
         ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-
 CREATE USER 'pharm_app'@'localhost' IDENTIFIED BY '1234';
 GRANT SELECT, INSERT, UPDATE, DELETE ON pharmacie.* TO 'pharm_app'@'localhost';
 FLUSH PRIVILEGES;
 
-SELECT * FROM type_medicament;
-SELECT * FROM fournisseur;
-SELECT * FROM employe;
-SELECT * FROM client;
-SELECT * FROM medicament;
-select * from stock_lot;
-
+USE pharmacie;
 INSERT INTO client (nom, prenom, telephone, adresse) VALUES
 ('Ben Ali', 'Mohamed', '98123456', 'Tunis'),
 ('Trabelsi', 'Amine', '22114567', 'Ariana'),
@@ -188,9 +181,10 @@ INSERT INTO stock_lot (medicament_id, fournisseur_id, quantite, date_expiration)
 (10,8, 50,  '2026-12-31');
 
 INSERT INTO employe (nom, prenom, username, password, role) VALUES
-('Admin', 'System', 'admin', 'admin123', 'Admin'),
-('Pharmacien', 'System', 'pharmacien', 'pharmacien123', 'Pharmacien'),
-('Caissier', 'System', 'caissier', 'caissier123', 'Caissier');
+('admin', 'System', 'admin', 'admin123', 'Admin'),
+('pharmacien', 'System', 'pharmacien', 'pharmacien123', 'Pharmacien'),
+('caissier', 'System', 'caissier', 'caissier123', 'Caissier');
+
 
 
 
