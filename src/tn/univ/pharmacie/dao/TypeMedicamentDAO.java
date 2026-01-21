@@ -1,12 +1,15 @@
 package tn.univ.pharmacie.dao;
 
-import tn.univ.pharmacie.model.*;
+import tn.univ.pharmacie.model.TypeMedicament;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TypeMedicamentDAO {
 
+    /**
+     * Ajouter un type de médicament
+     */
     public void ajouterType(TypeMedicament type) throws SQLException {
         String sql = "INSERT INTO type_medicament (libelle) VALUES (?)";
         try (Connection conn = ConnexionBD.getConnection();
@@ -17,11 +20,15 @@ public class TypeMedicamentDAO {
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
-                    type.setMedicamentId(rs.getInt(1));
+                    type.setId(rs.getInt(1));
                 }
             }
         }
     }
+
+    /**
+     * Récupérer un type par libellé
+     */
     public TypeMedicament getTypeByLibelle(String libelle) throws SQLException {
         String sql = "SELECT * FROM type_medicament WHERE libelle=?";
         try (Connection conn = ConnexionBD.getConnection();
@@ -32,13 +39,17 @@ public class TypeMedicamentDAO {
 
             if (rs.next()) {
                 TypeMedicament type = new TypeMedicament();
-                type.setMedicamentId(rs.getInt("id"));
+                type.setId(rs.getInt("id"));
                 type.setLibelle(rs.getString("libelle"));
                 return type;
             }
         }
-        return null; // pas trouvé
+        return null;
     }
+
+    /**
+     * Supprimer un type par ID
+     */
     public void supprimerType(int id) throws SQLException {
         String sql = "DELETE FROM type_medicament WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
@@ -48,16 +59,22 @@ public class TypeMedicamentDAO {
         }
     }
 
+    /**
+     * Modifier un type existant
+     */
     public void modifierType(TypeMedicament type) throws SQLException {
         String sql = "UPDATE type_medicament SET libelle=? WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, type.getLibelle());
-            stmt.setInt(2, type.getMedicamentId());
+            stmt.setInt(2, type.getId());
             stmt.executeUpdate();
         }
     }
 
+    /**
+     * Récupérer tous les types
+     */
     public List<TypeMedicament> getAllTypes() throws SQLException {
         List<TypeMedicament> liste = new ArrayList<>();
         String sql = "SELECT * FROM type_medicament";
@@ -67,14 +84,17 @@ public class TypeMedicamentDAO {
 
             while (rs.next()) {
                 TypeMedicament type = new TypeMedicament();
-                type.setMedicamentId(rs.getInt("id"));
+                type.setId(rs.getInt("id"));
                 type.setLibelle(rs.getString("libelle"));
                 liste.add(type);
             }
         }
         return liste;
     }
-    // On utilise getTypeById pour récupérer l'objet TyprMedicamant depuis la base
+
+    /**
+     * Récupérer un type par ID
+     */
     public TypeMedicament getTypeById(int id) throws SQLException {
         String sql = "SELECT * FROM type_medicament WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
@@ -85,7 +105,7 @@ public class TypeMedicamentDAO {
 
             if (rs.next()) {
                 TypeMedicament type = new TypeMedicament();
-                type.setMedicamentId(rs.getInt("id"));
+                type.setId(rs.getInt("id"));
                 type.setLibelle(rs.getString("libelle"));
                 return type;
             }

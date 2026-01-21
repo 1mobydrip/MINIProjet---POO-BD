@@ -1,49 +1,51 @@
 package tn.univ.pharmacie.model;
 
+import java.math.BigDecimal;
+
 public class Medicament {
     private int id;
     private String nom;
-    private double prix;
     private String description;
+    private double prix;
     private TypeMedicament type;
+    private Fournisseur fournisseur;
 
-    public int getId() {
-        return id;
+    public Medicament() {
+        this.type = new TypeMedicament();
+        this.fournisseur = new Fournisseur();
     }
 
-    public void setId(int id) {
-        this.id = id;
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getNom() { return nom; }
+    public void setNom(String nom) { this.nom = nom; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public double getPrix() { return prix; }
+    public void setPrix(double prix) { this.prix = prix; }
+
+    public TypeMedicament getType() { return type; }
+    public void setType(TypeMedicament type) { this.type = type; }
+
+    public Fournisseur getFournisseur() { return fournisseur; }
+    public void setFournisseur(Fournisseur fournisseur) {
+        this.fournisseur = fournisseur;
     }
 
-    public String getNom() {
-        return nom;
+    public int getFournisseurId() {
+        return fournisseur.getId();
     }
-
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setFournisseurId(int fournisseurId) {
+        this.fournisseur.setId(fournisseurId);
     }
-
-    public double getPrix() {
-        return prix;
+    public int getTypeId () {
+        return type.getId();
     }
-
-    public void setPrix(double prix) {
-        this.prix = prix;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public TypeMedicament getType() {
-        return type;
-    }
-
-    public void setType(TypeMedicament type) {
-        this.type = type;
+    public void setTypeId(int typeId) {
+        this.type.setId(typeId);
     }
 }
