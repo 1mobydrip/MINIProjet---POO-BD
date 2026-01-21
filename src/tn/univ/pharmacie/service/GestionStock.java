@@ -1,99 +1,64 @@
 package tn.univ.pharmacie.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import tn.univ.pharmacie.dao.StockLotDAO;
 import tn.univ.pharmacie.model.StockLot;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 
 public class GestionStock {
-    private static List<StockLot> stocks = new ArrayList<>();
-    private static int nextId = 1;
-    private static final int SEUIL_STOCK = 10; // Seuil minimum de stock
+    private StockLotDAO stockLotDAO = new StockLotDAO();
+    private static final int SEUIL_STOCK = 10; // seuil minimum pour alerte
 
-    public void mettreAJourStock(int medicamentId, int quantite) {
-        if (quantite < 0) {
-            throw new IllegalArgumentException("La quantité ne peut pas être négative");
+    public void mettreAJourStock(int medicamentId, int quantite) throws SQLException {
+        StockLot lot = stockLotDAO.getStockLotByMedicamentId(medicamentId);
+        if (lot == null) {
+            throw new IllegalArgumentException("Aucun stock trouvé pour le médicament ID " + medicamentId);
         }
-        
-        for (StockLot stock : stocks) {
-            if (stock.getMedicament() != null && stock.getMedicament().getId() == medicamentId) {
-                stock.setQuantite(quantite);
-                return;
-            }
-        }
-        
-        throw new IllegalArgumentException("Aucun stock trouvé pour le médicament avec l'ID " + medicamentId);
+        lot.setQuantite(quantite);
+        stockLotDAO.modifierStockLot(lot);
     }
 
-    public void ajouterQuantiteStock(int medicamentId, int quantite) {
-        if (quantite <= 0) {
-            throw new IllegalArgumentException("La quantité à ajouter doit être positive");
-        }
-        
-        for (StockLot stock : stocks) {
-            if (stock.getMedicament() != null && stock.getMedicament().getId() == medicamentId) {
-                stock.setQuantite(stock.getQuantite() + quantite);
-                return;
-            }
-        }
-        
-        throw new IllegalArgumentException("Aucun stock trouvé pour le médicament avec l'ID " + medicamentId);
-    }
-
-    public void retirerQuantiteStock(int medicamentId, int quantite) {
-        if (quantite <= 0) {
-            throw new IllegalArgumentException("La quantité à retirer doit être positive");
-        }
-        
-        for (StockLot stock : stocks) {
-            if (stock.getMedicament() != null && stock.getMedicament().getId() == medicamentId) {
-                if (stock.getQuantite() < quantite) {
-                    throw new IllegalArgumentException("Stock insuffisant pour le médicament avec l'ID " + medicamentId);
-                }
-                stock.setQuantite(stock.getQuantite() - quantite);
-                return;
-            }
-        }
-        
-        throw new IllegalArgumentException("Aucun stock trouvé pour le médicament avec l'ID " + medicamentId);
-    }
-
-    public boolean verifierSeuilStock(int medicamentId) {
-        for (StockLot stock : stocks) {
-            if (stock.getMedicament() != null && stock.getMedicament().getId() == medicamentId) {
-                return stock.getQuantite() < SEUIL_STOCK;
-            }
-        }
-        return false;
-    }
-
-    public List<StockLot> consulterStock() {
-        return new ArrayList<>(stocks);
-    }
-
-    public void ajouterLotStock(StockLot lot) {
+    public void ajouterLotStock(StockLot lot) throws SQLException {
         if (lot == null || lot.getMedicament() == null) {
-            throw new IllegalArgumentException("Le lot de stock est invalide");
+            throw new IllegalArgumentException("Lot invalide");
         }
-        
         if (lot.getQuantite() <= 0) {
-            throw new IllegalArgumentException("La quantité du lot doit être positive");
+            throw new IllegalArgumentException("La quantité doit être positive");
         }
-        
-        lot.setId(nextId++);
-        stocks.add(lot);
+        stockLotDAO.ajouterStockLot(lot);
     }
 
-    public int getQuantiteMedicament(int medicamentId) {
-        for (StockLot stock : stocks) {
-            if (stock.getMedicament() != null && stock.getMedicament().getId() == medicamentId) {
-                return stock.getQuantite();
-            }
-        }
-        return 0;
+    public void supprimerLotStock(int id) throws SQLException {
+        stockLotDAO.supprimerStockLot(id);
+    }
+
+    public List<StockLot> consulterStock() throws SQLException {
+        return stockLotDAO.getAllStockLots();
+    }
+
+    public int getQuantiteMedicament(int medicamentId) throws SQLException {
+        StockLot lot = stockLotDAO.getStockLotByMedicamentId(medicamentId);
+        return (lot != null) ? lot.getQuantite() : 0;
+    }
+
+    public boolean verifierSeuilStock(int medicamentId) throws SQLException {
+        StockLot lot = stockLotDAO.getStockLotByMedicamentId(medicamentId);
+        return lot != null && lot.getQuantite() < SEUIL_STOCK;
     }
 
     public int getSeuilStock() {
         return SEUIL_STOCK;
+    }
+
+    public void mettreAJourStockParId(int stockId, int quantite, LocalDate dateExpiration) throws SQLException {
+        StockLot lot = stockLotDAO.getStockLotById(stockId);
+        if (lot == null) {
+            throw new IllegalArgumentException("Aucun stock trouvé avec l'ID " + stockId);
+        }
+        lot.setQuantite(quantite);
+        lot.setDateExpiration(dateExpiration);
+        stockLotDAO.modifierStockLot(lot);
     }
 }

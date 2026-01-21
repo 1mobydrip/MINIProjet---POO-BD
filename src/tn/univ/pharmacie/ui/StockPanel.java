@@ -2,16 +2,19 @@ package tn.univ.pharmacie.ui;
 
 import tn.univ.pharmacie.model.StockLot;
 import tn.univ.pharmacie.service.GestionStock;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class StockPanel extends JPanel {
     private GestionStock gestionStock;
     private JTable stockTable;
     private DefaultTableModel tableModel;
-    private JTextField txtMedicamentId, txtQuantite;
+    private JTextField txtStockId, txtQuantite, txtDateExp;
     private JButton btnMettreAJour, btnRafraichir;
     private JTextArea txtAlerts;
 
@@ -31,8 +34,9 @@ public class StockPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        txtMedicamentId = new JTextField(10);
+        txtStockId = new JTextField(10);
         txtQuantite = new JTextField(10);
+        txtDateExp = new JTextField(10); // format YYYY-MM-DD
         btnMettreAJour = new JButton("🔄 Mettre à Jour");
         btnRafraichir = new JButton("🔃 Rafraîchir");
 
@@ -40,9 +44,9 @@ public class StockPanel extends JPanel {
         btnRafraichir.addActionListener(e -> rafraichirTable());
 
         gbc.gridx = 0; gbc.gridy = 0;
-        formPanel.add(new JLabel("ID Médicament:"), gbc);
+        formPanel.add(new JLabel("ID Stock:"), gbc);
         gbc.gridx = 1;
-        formPanel.add(txtMedicamentId, gbc);
+        formPanel.add(txtStockId, gbc);
 
         gbc.gridx = 2; gbc.gridy = 0;
         formPanel.add(new JLabel("Quantité:"), gbc);
@@ -50,8 +54,13 @@ public class StockPanel extends JPanel {
         formPanel.add(txtQuantite, gbc);
 
         gbc.gridx = 4; gbc.gridy = 0;
-        formPanel.add(btnMettreAJour, gbc);
+        formPanel.add(new JLabel("Date Expiration (YYYY-MM-DD):"), gbc);
         gbc.gridx = 5;
+        formPanel.add(txtDateExp, gbc);
+
+        gbc.gridx = 6; gbc.gridy = 0;
+        formPanel.add(btnMettreAJour, gbc);
+        gbc.gridx = 7;
         formPanel.add(btnRafraichir, gbc);
 
         add(formPanel, BorderLayout.NORTH);
@@ -74,13 +83,15 @@ public class StockPanel extends JPanel {
 
     private void mettreAJourStock() {
         try {
-            int medicamentId = Integer.parseInt(txtMedicamentId.getText());
+            int stockId = Integer.parseInt(txtStockId.getText());
             int quantite = Integer.parseInt(txtQuantite.getText());
+            LocalDate dateExp = LocalDate.parse(txtDateExp.getText());
 
-            gestionStock.mettreAJourStock(medicamentId, quantite);
+            gestionStock.mettreAJourStockParId(stockId, quantite, dateExp);
             JOptionPane.showMessageDialog(this, "Stock mis à jour!", "Succès", JOptionPane.INFORMATION_MESSAGE);
-            txtMedicamentId.setText("");
+            txtStockId.setText("");
             txtQuantite.setText("");
+            txtDateExp.setText("");
             rafraichirTable();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Erreur: " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -89,7 +100,12 @@ public class StockPanel extends JPanel {
 
     private void rafraichirTable() {
         tableModel.setRowCount(0);
-        List<StockLot> stocks = gestionStock.consulterStock();
+        List<StockLot> stocks = null;
+        try {
+            stocks = gestionStock.consulterStock();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         StringBuilder alerts = new StringBuilder();
 
         for (StockLot lot : stocks) {
@@ -98,11 +114,11 @@ public class StockPanel extends JPanel {
             String statut = lot.getQuantite() < gestionStock.getSeuilStock() ? "⚠️ ALERTE" : "✓ OK";
 
             tableModel.addRow(new Object[]{
-                lot.getId(),
-                medicament,
-                lot.getQuantite(),
-                exp,
-                statut
+                    lot.getId(),
+                    medicament,
+                    lot.getQuantite(),
+                    exp,
+                    statut
             });
 
             if (lot.getQuantite() < gestionStock.getSeuilStock()) {

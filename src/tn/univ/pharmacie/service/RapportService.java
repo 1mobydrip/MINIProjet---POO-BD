@@ -1,5 +1,6 @@
 package tn.univ.pharmacie.service;
 
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,12 @@ public class RapportService {
      * Génère un état lisible du stock (par lot)
      */
     public String genererEtatStock() {
-        List<StockLot> stocks = gestionStock.consulterStock();
+        List<StockLot> stocks = null;
+        try {
+            stocks = gestionStock.consulterStock();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         StringBuilder sb = new StringBuilder();
         DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE;
         sb.append("Etat du stock:\n");
