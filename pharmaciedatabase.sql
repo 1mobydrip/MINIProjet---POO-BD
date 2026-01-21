@@ -187,7 +187,10 @@ INSERT INTO stock_lot (medicament_id, fournisseur_id, quantite, date_expiration)
 (9, 7, 75,  '2026-04-09'),
 (10,8, 50,  '2026-12-31');
 
-
+INSERT INTO employe (nom, prenom, username, password, role) VALUES
+('Admin', 'System', 'admin', 'admin123', 'Admin'),
+('Pharmacien', 'System', 'pharmacien', 'pharmacien123', 'Pharmacien'),
+('Caissier', 'System', 'caissier', 'caissier123', 'Caissier');
 
 
 
