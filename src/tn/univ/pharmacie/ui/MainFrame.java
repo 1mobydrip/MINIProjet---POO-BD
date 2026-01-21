@@ -24,14 +24,10 @@ public class MainFrame extends JFrame {
     }
 
     private void initComponents() {
-        // Create menu bar
         createMenuBar();
-
-        // Create main panel with card layout
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
 
-        // Add all panels
         contentPanel.add(new DashboardPanel(), "DASHBOARD");
         contentPanel.add(new ClientsPanel(), "CLIENTS");
         contentPanel.add(new ProduitsPanel(), "PRODUITS");
@@ -48,13 +44,11 @@ public class MainFrame extends JFrame {
     private void createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        // File Menu
         JMenu fileMenu = new JMenu("Fichier");
         JMenuItem exitItem = new JMenuItem("Quitter");
         exitItem.addActionListener(e -> System.exit(0));
         fileMenu.add(exitItem);
 
-        // Gestion Menu
         JMenu gestionMenu = new JMenu("Gestion");
 
         JMenuItem clientsItem = new JMenuItem("👥 Clients");
@@ -81,13 +75,11 @@ public class MainFrame extends JFrame {
         ventesItem.addActionListener(e -> cardLayout.show(contentPanel, "VENTES"));
         gestionMenu.add(ventesItem);
 
-        // Reports Menu
         JMenu rapportsMenu = new JMenu("Rapports");
         JMenuItem rapportsItem = new JMenuItem("📊 Rapports & Analyses");
         rapportsItem.addActionListener(e -> cardLayout.show(contentPanel, "RAPPORTS"));
         rapportsMenu.add(rapportsItem);
 
-        // Help Menu
         JMenu helpMenu = new JMenu("Aide");
         JMenuItem aboutItem = new JMenuItem("À propos");
         aboutItem.addActionListener(e -> JOptionPane.showMessageDialog(this, 

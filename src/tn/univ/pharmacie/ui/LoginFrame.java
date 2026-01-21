@@ -1,10 +1,12 @@
 package tn.univ.pharmacie.ui;
 
+import tn.univ.pharmacie.model.Employe;
+import tn.univ.pharmacie.service.AuthService;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class LoginFrame extends JFrame {
-
     private JTextField txtUsername;
     private JPasswordField txtPassword;
     private JButton btnLogin;
@@ -63,7 +65,24 @@ public class LoginFrame extends JFrame {
             return;
         }
 
-        // CALL SERVICE HERE (no DB, no SQL)
-        System.out.println("Login attempt: " + username);
+        AuthService authService = new AuthService();
+        Employe employe = authService.login(username, password);
+
+        if (employe != null) {
+            JOptionPane.showMessageDialog(this,
+                    "Login successful! Welcome " + employe.getNom(),
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            MainFrame mainFrame = new MainFrame(employe);
+            mainFrame.setVisible(true);
+
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Invalid credentials",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
