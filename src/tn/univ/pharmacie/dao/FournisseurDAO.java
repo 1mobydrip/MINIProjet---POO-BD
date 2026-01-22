@@ -34,20 +34,6 @@ public class FournisseurDAO {
         }
     }
 
-    public int compterFournisseurs() throws SQLException {
-        String sql = "SELECT COUNT(*) AS total FROM fournisseur";
-        try (Connection conn = ConnexionBD.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            if (rs.next()) {
-                return rs.getInt("total");
-            }
-        }
-        return 0;
-    }
-
-
     public List<Fournisseur> getAllFournisseurs() throws SQLException {
         List<Fournisseur> liste = new ArrayList<>();
         String sql = "SELECT * FROM fournisseur";

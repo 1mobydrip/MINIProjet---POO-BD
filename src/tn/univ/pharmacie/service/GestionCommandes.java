@@ -1,12 +1,10 @@
 package tn.univ.pharmacie.service;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import tn.univ.pharmacie.dao.MedicamentDAO;
-import tn.univ.pharmacie.model.Commande;
 import tn.univ.pharmacie.model.Commande.StatutCommande;
 import tn.univ.pharmacie.model.CommandeDetail;
 import tn.univ.pharmacie.dao.commandeDAO;
@@ -109,7 +107,6 @@ public class GestionCommandes {
         }
         return results;
     }
-
 
     public double calculerMontantTotal() {
         double total = 0;

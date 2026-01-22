@@ -46,61 +46,10 @@ public class GestionVentes {
         stockLotDAO.modifierStockLot(lot);
     }
 
-
-    public void modifierQuantiteVenteDetail(int venteId, int medicamentId, int nouvelleQuantite) throws SQLException {
-        if (nouvelleQuantite <= 0) {
-            throw new IllegalArgumentException("La quantité doit être positive");
-        }
-
-        // Vérifier stock avant modification
-        StockLot lot = stockLotDAO.getStockLotByMedicamentId(medicamentId);
-        if (lot == null) {
-            throw new IllegalArgumentException("Produit non disponible en stock");
-        }
-        if (lot.getQuantite() < nouvelleQuantite) {
-            throw new IllegalArgumentException("Stock insuffisant pour ce produit");
-        }
-
-        // Mettre à jour la quantité dans vente_detail
-        venteDetailDAO.modifierQuantite(venteId, medicamentId, nouvelleQuantite);
-
-        // Ajuster le stock (ici simplifié: on suppose qu'on remplace l'ancienne quantité par la nouvelle)
-        // Pour être exact, il faudrait récupérer l'ancienne quantité et ajuster la différence
-        lot.setQuantite(lot.getQuantite() - nouvelleQuantite);
-        stockLotDAO.modifierStockLot(lot);
-    }
-
-
-    public void modifierExpirationVente(int venteId, LocalDate nouvelleDate) throws SQLException {
-        Vente vente = venteDAO.getVenteById(venteId);
-        if (vente == null) {
-            throw new IllegalArgumentException("Vente introuvable");
-        }
-        if (nouvelleDate.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("La date d'expiration doit être future");
-        }
-
-        // Ici on suppose que la date d'expiration est stockée dans StockLot lié au medicament de la vente
-        List<VenteDetail> details = venteDetailDAO.getDetailsByVente(venteId);
-        if (!details.isEmpty()) {
-            VenteDetail vd = details.get(0);
-            StockLot lot = stockLotDAO.getStockLotByMedicamentId(vd.getMedicament().getId());
-            if (lot != null) {
-                lot.setDateExpiration(nouvelleDate);
-                stockLotDAO.modifierStockLot(lot);
-            }
-        }
-    }
-
-
     public List<Vente> consulterHistoriqueClient(int clientId) throws SQLException {
         return venteDAO.getAllVentes().stream()
                 .filter(v -> v.getClient() != null && v.getClient().getId() == clientId)
                 .toList();
-    }
-
-    public List<Vente> listerVentes() throws SQLException {
-        return venteDAO.getAllVentes();
     }
 
     public double calculerMontantTotalVentes() throws SQLException {

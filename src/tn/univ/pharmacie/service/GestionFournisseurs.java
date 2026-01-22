@@ -35,6 +35,8 @@ public class GestionFournisseurs {
     }
 
     public void modifierFournisseur(Fournisseur f) {
+        FournisseurDAO dao = new FournisseurDAO();
+
         if (f == null || f.getId() <= 0) {
             throw new IllegalArgumentException("Fournisseur invalide");
         }
@@ -43,10 +45,11 @@ public class GestionFournisseurs {
         if (existing == null) {
             throw new IllegalArgumentException("Fournisseur avec l'ID " + f.getId() + " non trouvé");
         }
-        
-        existing.setNom(f.getNom());
-        existing.setTelephone(f.getTelephone());
-        existing.setAdresse(f.getAdresse());
+        try {
+            dao.modifierFournisseur(existing);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void supprimerFournisseur(int fournisseurId) {
@@ -89,6 +92,8 @@ public class GestionFournisseurs {
         if (consulterFournisseur(fournisseurId) == null) {
             throw new IllegalArgumentException("Fournisseur avec l'ID " + fournisseurId + " non trouvé");
         }
+
+
         
         int reussies = livraisonsReussies.getOrDefault(fournisseurId, 0);
         int echouees = livraisonsEchouees.getOrDefault(fournisseurId, 0);

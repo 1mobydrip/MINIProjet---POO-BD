@@ -8,7 +8,6 @@ import tn.univ.pharmacie.dao.ClientDAO;
 
 public class GestionClients {
     private static List<Client> clients = new ArrayList<>();
-    private static int nextId = 1;
 
     public void ajouterClient(Client c) throws SQLException {
         if (c == null || c.getNom() == null || c.getNom().isEmpty() || 
@@ -21,6 +20,8 @@ public class GestionClients {
     }
 
     public void modifierClient(Client c) {
+        ClientDAO dao = new ClientDAO();
+
         if (c == null || c.getId() <= 0) {
             throw new IllegalArgumentException("Client invalide");
         }
@@ -29,11 +30,12 @@ public class GestionClients {
         if (existing == null) {
             throw new IllegalArgumentException("Client avec l'ID " + c.getId() + " non trouvé");
         }
-        
-        existing.setNom(c.getNom());
-        existing.setPrenom(c.getPrenom());
-        existing.setTelephone(c.getTelephone());
-        existing.setAdresse(c.getAdresse());
+
+        try {
+            dao.updateClient(existing);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void supprimerClient(int clientId) throws SQLException {

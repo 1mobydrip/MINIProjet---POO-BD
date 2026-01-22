@@ -7,9 +7,6 @@ import java.util.List;
 
 public class TypeMedicamentDAO {
 
-    /**
-     * Ajouter un type de médicament
-     */
     public void ajouterType(TypeMedicament type) throws SQLException {
         String sql = "INSERT INTO type_medicament (libelle) VALUES (?)";
         try (Connection conn = ConnexionBD.getConnection();
@@ -26,9 +23,6 @@ public class TypeMedicamentDAO {
         }
     }
 
-    /**
-     * Récupérer un type par libellé
-     */
     public TypeMedicament getTypeByLibelle(String libelle) throws SQLException {
         String sql = "SELECT * FROM type_medicament WHERE libelle=?";
         try (Connection conn = ConnexionBD.getConnection();
@@ -47,9 +41,6 @@ public class TypeMedicamentDAO {
         return null;
     }
 
-    /**
-     * Supprimer un type par ID
-     */
     public void supprimerType(int id) throws SQLException {
         String sql = "DELETE FROM type_medicament WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
@@ -59,9 +50,6 @@ public class TypeMedicamentDAO {
         }
     }
 
-    /**
-     * Modifier un type existant
-     */
     public void modifierType(TypeMedicament type) throws SQLException {
         String sql = "UPDATE type_medicament SET libelle=? WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
@@ -72,9 +60,6 @@ public class TypeMedicamentDAO {
         }
     }
 
-    /**
-     * Récupérer tous les types
-     */
     public List<TypeMedicament> getAllTypes() throws SQLException {
         List<TypeMedicament> liste = new ArrayList<>();
         String sql = "SELECT * FROM type_medicament";
@@ -92,9 +77,6 @@ public class TypeMedicamentDAO {
         return liste;
     }
 
-    /**
-     * Récupérer un type par ID
-     */
     public TypeMedicament getTypeById(int id) throws SQLException {
         String sql = "SELECT * FROM type_medicament WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();

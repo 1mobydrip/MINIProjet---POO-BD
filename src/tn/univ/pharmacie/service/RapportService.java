@@ -47,7 +47,6 @@ public class RapportService {
         return sb.toString();
     }
 
-
     public double genererChiffreAffaires() {
         try {
             return gestionVentes.calculerMontantTotalVentes();
@@ -55,7 +54,6 @@ public class RapportService {
             throw new RuntimeException(e);
         }
     }
-
 
     public Map<Fournisseur, Double> genererPerformanceFournisseurs() {
         List<Fournisseur> fournisseurs = gestionFournisseurs.listerFournisseurs();
@@ -68,7 +66,6 @@ public class RapportService {
 
         return performance;
     }
-
 
     public String genererRapportPerformanceFournisseursTexte() {
         Map<Fournisseur, Double> perf = genererPerformanceFournisseurs();

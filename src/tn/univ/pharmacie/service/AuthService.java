@@ -4,7 +4,6 @@ import tn.univ.pharmacie.dao.EmployeDAO;
 import tn.univ.pharmacie.model.Employe;
 
 public class AuthService {
-    private EmployeDAO employeDAO = new EmployeDAO();
 
     public Employe login(String username, String password) {
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {

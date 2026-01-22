@@ -9,16 +9,8 @@ import java.util.List;
 
 public class GestionStock {
     private StockLotDAO stockLotDAO = new StockLotDAO();
-    private static final int SEUIL_STOCK = 10; // seuil minimum pour alerte
+    private static final int SEUIL_STOCK = 10;
 
-    public void mettreAJourStock(int medicamentId, int quantite) throws SQLException {
-        StockLot lot = stockLotDAO.getStockLotByMedicamentId(medicamentId);
-        if (lot == null) {
-            throw new IllegalArgumentException("Aucun stock trouvé pour le médicament ID " + medicamentId);
-        }
-        lot.setQuantite(quantite);
-        stockLotDAO.modifierStockLot(lot);
-    }
 
     public void ajouterLotStock(StockLot lot) throws SQLException {
         if (lot == null || lot.getMedicament() == null) {
@@ -36,16 +28,6 @@ public class GestionStock {
 
     public List<StockLot> consulterStock() throws SQLException {
         return stockLotDAO.getAllStockLots();
-    }
-
-    public int getQuantiteMedicament(int medicamentId) throws SQLException {
-        StockLot lot = stockLotDAO.getStockLotByMedicamentId(medicamentId);
-        return (lot != null) ? lot.getQuantite() : 0;
-    }
-
-    public boolean verifierSeuilStock(int medicamentId) throws SQLException {
-        StockLot lot = stockLotDAO.getStockLotByMedicamentId(medicamentId);
-        return lot != null && lot.getQuantite() < SEUIL_STOCK;
     }
 
     public int getSeuilStock() {

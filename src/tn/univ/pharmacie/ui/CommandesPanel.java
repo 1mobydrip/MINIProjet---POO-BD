@@ -130,7 +130,6 @@ public class CommandesPanel extends JPanel {
         }
     }
 
-
     private void validerCommande() {
         int row = commandesTable.getSelectedRow();
         if (row < 0) {

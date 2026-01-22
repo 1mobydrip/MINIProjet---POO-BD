@@ -39,7 +39,6 @@ public class MedicamentDAO {
     }
 
     public void modifierMedicament(Medicament med) throws SQLException {
-        // FIXED: removed extra comma and corrected parameter index
         String sql = "UPDATE medicament SET nom=?, description=?, prix=?, type_id=?, fournisseur_id=? WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

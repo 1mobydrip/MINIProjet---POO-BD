@@ -36,7 +36,7 @@ public class EmployeDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null; // authentification échouée
+        return null;
     }
 
     public void ajouterEmploye(Employe emp) throws SQLException {
@@ -70,19 +70,6 @@ public class EmployeDAO {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }
-    }
-
-    public int compterEmployes() throws SQLException {
-        String sql = "SELECT COUNT(*) AS total FROM employe";
-        try (Connection conn = ConnexionBD.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            if (rs.next()) {
-                return rs.getInt("total");
-            }
-        }
-        return 0;
     }
 
     public List<Employe> getAllEmployes() throws SQLException {

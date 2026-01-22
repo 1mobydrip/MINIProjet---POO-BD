@@ -28,10 +28,4 @@ public class TypeMedicament {
         this.libelle = libelle;
     }
 
-    public void setMedicamentId(int id) {
-        this.medicament.setId(id);
-    }
-    public int getMedicamentId() {
-        return medicament.getId();
-    }
 }

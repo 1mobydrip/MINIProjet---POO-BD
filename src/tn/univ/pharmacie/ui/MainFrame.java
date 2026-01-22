@@ -98,7 +98,6 @@ public class MainFrame extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            // For testing, create a dummy employee
             Employe employe = new Employe();
             employe.setId(1);
             employe.setNom("Admin");

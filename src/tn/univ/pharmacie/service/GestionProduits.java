@@ -50,10 +50,6 @@ public class GestionProduits {
 
     }
 
-    public Medicament consulterProduit(int produitId) throws SQLException {
-        return medicamentDAO.getMedicamentById(produitId);
-    }
-
     public List<Medicament> listerProduits() throws SQLException {
         return medicamentDAO.getAllMedicaments();
     }
@@ -65,7 +61,4 @@ public class GestionProduits {
                 .toList();
     }
 
-    public int getTotalProduits() throws SQLException {
-        return listerProduits().size();
-    }
 }

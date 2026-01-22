@@ -31,17 +31,20 @@ public class ClientDAO {
         }
     }
 
-    public int compterClients() throws SQLException {
-        String sql = "SELECT COUNT(*) AS total FROM client";
-        try (Connection conn = ConnexionBD.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+    public void updateClient(Client client) throws SQLException {
+        String sql = "UPDATE client SET nom = ?, prenom = ?, telephone = ?, adresse = ? WHERE id = ?";
 
-            if (rs.next()) {
-                return rs.getInt("total");
-            }
+        try (Connection conn = ConnexionBD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, client.getNom());
+            stmt.setString(2, client.getPrenom());
+            stmt.setInt(3, client.getTelephone());
+            stmt.setString(4, client.getAdresse());
+            stmt.setInt(5, client.getId());
+
+            stmt.executeUpdate();
         }
-        return 0;
     }
 
     public List<Client> getAllClients() throws SQLException {
@@ -62,22 +65,6 @@ public class ClientDAO {
             }
         }
         return clients;
-    }
-
-    public void updateClient(Client client) throws SQLException {
-        String sql = "UPDATE client SET nom = ?, prenom = ?, telephone = ?, adresse = ? WHERE id = ?";
-
-        try (Connection conn = ConnexionBD.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, client.getNom());
-            stmt.setString(2, client.getPrenom());
-            stmt.setInt(3, client.getTelephone());
-            stmt.setString(4, client.getAdresse());
-            stmt.setInt(5, client.getId());
-
-            stmt.executeUpdate();
-        }
     }
 
 
