@@ -74,16 +74,17 @@ CREATE TABLE commande (
 ) ENGINE=InnoDB;
 
 CREATE TABLE commande_detail (
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     commande_id INT UNSIGNED NOT NULL,
     medicament_id INT UNSIGNED NOT NULL,
     quantite INT NOT NULL,
     
-    PRIMARY KEY (commande_id, medicament_id),
     FOREIGN KEY (commande_id) REFERENCES commande(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (medicament_id) REFERENCES medicament(id)
         ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
 
 CREATE TABLE vente (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -98,22 +99,33 @@ CREATE TABLE vente (
 ) ENGINE=InnoDB;
 
 CREATE TABLE vente_detail (
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     vente_id INT UNSIGNED NOT NULL,
     medicament_id INT UNSIGNED NOT NULL,
     quantite INT NOT NULL,
     
-    PRIMARY KEY (vente_id, medicament_id),
     FOREIGN KEY (vente_id) REFERENCES vente(id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (medicament_id) REFERENCES medicament(id)
         ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+
 CREATE USER 'pharm_app'@'localhost' IDENTIFIED BY '1234';
 GRANT SELECT, INSERT, UPDATE, DELETE ON pharmacie.* TO 'pharm_app'@'localhost';
 FLUSH PRIVILEGES;
 
-USE pharmacie;
+SELECT * FROM type_medicament;
+SELECT * FROM fournisseur;
+SELECT * FROM employe;
+SELECT * FROM client;
+SELECT * FROM medicament;
+select * from stock_lot;
+select * from vente;
+select * from vente_detail;
+select * from commande;
+select * from commande_detail;
+
 INSERT INTO client (nom, prenom, telephone, adresse) VALUES
 ('Ben Ali', 'Mohamed', '98123456', 'Tunis'),
 ('Trabelsi', 'Amine', '22114567', 'Ariana'),
@@ -181,9 +193,23 @@ INSERT INTO stock_lot (medicament_id, fournisseur_id, quantite, date_expiration)
 (10,8, 50,  '2026-12-31');
 
 INSERT INTO employe (nom, prenom, username, password, role) VALUES
-('admin', 'System', 'admin', 'admin123', 'Admin'),
-('pharmacien', 'System', 'pharmacien', 'pharmacien123', 'Pharmacien'),
-('caissier', 'System', 'caissier', 'caissier123', 'Caissier');
+('Admin', 'System', 'admin', 'admin123', 'Admin'),
+('Pharmacien', 'System', 'pharmacien', 'pharmacien123', 'Pharmacien'),
+('Caissier', 'System', 'caissier', 'caissier123', 'Caissier');
+
+
+INSERT INTO vente (client_id, employe_id, date_vente) VALUES
+(6, 2, '2026-01-10'),
+(3, 3, '2026-01-11'),
+(5, 2, '2026-01-12');
+
+INSERT INTO vente_detail (vente_id, medicament_id, quantite) VALUES
+(5, 31, 2),
+(5, 36, 1),
+(6, 32, 1),
+(6, 33, 2),
+(7, 37, 1),
+(7, 35, 1);
 
 
 
