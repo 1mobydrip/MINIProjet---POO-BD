@@ -97,4 +97,19 @@ public class MedicamentDAO {
         }
         return null;
     }
+
+    public double getPrixById(int id) throws SQLException {
+        String sql = "SELECT prix FROM medicament WHERE id=?";
+        try (Connection conn = ConnexionBD.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+
+                stmt.setInt(1, id);
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getBigDecimal("prix").doubleValue();
+                }
+            }
+        return 0;
+    }
 }

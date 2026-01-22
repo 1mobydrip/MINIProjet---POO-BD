@@ -1,9 +1,18 @@
 package tn.univ.pharmacie.model;
 
 public class VenteDetail {
+    private int id;
     private Vente vente;
     private Medicament medicament;
     private int quantite;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Vente getVente() {
         return vente;
@@ -27,5 +36,10 @@ public class VenteDetail {
 
     public void setQuantite(int quantite) {
         this.quantite = quantite;
+    }
+
+    public double getMontantTotal() {
+        double prix = medicament.getPrix();
+        return quantite * prix;
     }
 }

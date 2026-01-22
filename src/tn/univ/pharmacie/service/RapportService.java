@@ -49,11 +49,13 @@ public class RapportService {
         return sb.toString();
     }
 
-    /**
-     * Génère le chiffre d'affaires total (toutes ventes)
-     */
+
     public double genererChiffreAffaires() {
-        return gestionVentes.calculerMontantTotalVentes();
+        try {
+            return gestionVentes.calculerMontantTotalVentes();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

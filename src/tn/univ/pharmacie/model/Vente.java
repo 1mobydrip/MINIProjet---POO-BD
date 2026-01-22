@@ -1,15 +1,12 @@
 package tn.univ.pharmacie.model;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class Vente {
     private int id;
-    private Client clien;
+    private Client client;
     private Employe employe;
     private LocalDate dateVente;
-    private double montantTotal;
-    private List<VenteDetail> details;
 
     public int getId() {
         return id;
@@ -19,12 +16,12 @@ public class Vente {
         this.id = id;
     }
 
-    public Client getClien() {
-        return clien;
+    public Client getClient() {
+        return client;
     }
 
-    public void setClien(Client clien) {
-        this.clien = clien;
+    public void setClient(Client clien) {
+        this.client = clien;
     }
 
     public Employe getEmploye() {
@@ -43,19 +40,5 @@ public class Vente {
         this.dateVente = dateVente;
     }
 
-    public double getMontantTotal() {
-        return montantTotal;
-    }
 
-    public void setMontantTotal(double montantTotal) {
-        this.montantTotal = montantTotal;
-    }
-
-    public List<VenteDetail> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<VenteDetail> details) {
-        this.details = details;
-    }
 }

@@ -9,15 +9,13 @@ import java.util.List;
 
 public class VenteDAO {
 
-    /**
-     * Ajouter une vente dans la base.
-     */
+
     public void ajouterVente(Vente vente) throws SQLException {
         String sql = "INSERT INTO vente (client_id, employe_id, date_vente) VALUES (?,?,?)";
         try (Connection conn = ConnexionBD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setInt(1, vente.getClien().getId());
+            stmt.setInt(1, vente.getClient().getId());
             stmt.setInt(2, vente.getEmploye().getId());
             stmt.setDate(3, Date.valueOf(vente.getDateVente()));
 
@@ -31,9 +29,6 @@ public class VenteDAO {
         }
     }
 
-    /**
-     * Supprimer une vente par ID
-     */
     public void supprimerVente(int id) throws SQLException {
         String sql = "DELETE FROM vente WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
@@ -43,15 +38,12 @@ public class VenteDAO {
         }
     }
 
-    /**
-     * Modifier une vente
-     */
     public void modifierVente(Vente vente) throws SQLException {
         String sql = "UPDATE vente SET client_id=?, employe_id=?, date_vente=? WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, vente.getClien().getId());
+            stmt.setInt(1, vente.getClient().getId());
             stmt.setInt(2, vente.getEmploye().getId());
             stmt.setDate(3, Date.valueOf(vente.getDateVente()));
             stmt.setInt(4, vente.getId());
@@ -60,9 +52,6 @@ public class VenteDAO {
         }
     }
 
-    /**
-     * Lister toutes les ventes
-     */
     public List<Vente> getAllVentes() throws SQLException {
         List<Vente> liste = new ArrayList<>();
         String sql = "SELECT * FROM vente";
@@ -74,10 +63,10 @@ public class VenteDAO {
                 Vente vente = new Vente();
                 vente.setId(rs.getInt("id"));
 
-                // Créer les objets Client et Employe
+
                 Client client = new Client();
                 client.setId(rs.getInt("client_id"));
-                vente.setClien(client);
+                vente.setClient(client);
 
                 Employe employe = new Employe();
                 employe.setId(rs.getInt("employe_id"));
@@ -90,9 +79,6 @@ public class VenteDAO {
         return liste;
     }
 
-    /**
-     * Récupérer une vente par ID
-     */
     public Vente getVenteById(int id) throws SQLException {
         String sql = "SELECT * FROM vente WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
@@ -107,7 +93,7 @@ public class VenteDAO {
 
                 Client client = new Client();
                 client.setId(rs.getInt("client_id"));
-                vente.setClien(client);
+                vente.setClient(client);
 
                 Employe employe = new Employe();
                 employe.setId(rs.getInt("employe_id"));
