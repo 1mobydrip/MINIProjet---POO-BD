@@ -11,7 +11,6 @@ import tn.univ.pharmacie.model.Fournisseur;
 
 public class GestionFournisseurs {
     private static List<Fournisseur> fournisseurs = new ArrayList<>();
-    private static int nextId = 1;
     private static Map<Integer, Integer> livraisonsReussies = new HashMap<>();
     private static Map<Integer, Integer> livraisonsEchouees = new HashMap<>();
 
@@ -106,7 +105,7 @@ public class GestionFournisseurs {
         if (consulterFournisseur(fournisseurId) == null) {
             throw new IllegalArgumentException("Fournisseur avec l'ID " + fournisseurId + " non trouvé");
         }
-        
+
         livraisonsReussies.put(fournisseurId, livraisonsReussies.getOrDefault(fournisseurId, 0) + 1);
     }
 

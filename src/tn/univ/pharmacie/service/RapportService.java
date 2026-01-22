@@ -9,15 +9,13 @@ import tn.univ.pharmacie.model.Fournisseur;
 import tn.univ.pharmacie.model.Medicament;
 import tn.univ.pharmacie.model.StockLot;
 
-// 📊 Rapports et analyses
+
 public class RapportService {
     private GestionStock gestionStock = new GestionStock();
     private GestionVentes gestionVentes = new GestionVentes();
     private GestionFournisseurs gestionFournisseurs = new GestionFournisseurs();
 
-    /**
-     * Génère un état lisible du stock (par lot)
-     */
+
     public String genererEtatStock() {
         List<StockLot> stocks = null;
         try {
@@ -58,9 +56,7 @@ public class RapportService {
         }
     }
 
-    /**
-     * Génère la performance par fournisseur (pourcentage de livraisons réussies)
-     */
+
     public Map<Fournisseur, Double> genererPerformanceFournisseurs() {
         List<Fournisseur> fournisseurs = gestionFournisseurs.listerFournisseurs();
         Map<Fournisseur, Double> performance = new HashMap<>();
@@ -73,9 +69,7 @@ public class RapportService {
         return performance;
     }
 
-    /**
-     * Méthode utilitaire: retourne un rapport texte simple sur la performance des fournisseurs
-     */
+
     public String genererRapportPerformanceFournisseursTexte() {
         Map<Fournisseur, Double> perf = genererPerformanceFournisseurs();
         StringBuilder sb = new StringBuilder();

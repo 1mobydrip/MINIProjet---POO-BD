@@ -1,129 +1,131 @@
 package tn.univ.pharmacie.service;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import tn.univ.pharmacie.dao.MedicamentDAO;
 import tn.univ.pharmacie.model.Commande;
 import tn.univ.pharmacie.model.Commande.StatutCommande;
+import tn.univ.pharmacie.model.CommandeDetail;
+import tn.univ.pharmacie.dao.commandeDAO;
+import tn.univ.pharmacie.dao.CommandeDetailDAO;
 
 
 public class GestionCommandes {
-    private static List<Commande> commandes = new ArrayList<>();
-    private static int nextId = 1;
+    private static CommandeDetailDAO cdDAO = new CommandeDetailDAO();
+    private static List<CommandeDetail> commandes;
+
+    static {
+        try {
+            commandes = cdDAO.getAllCommandeDetails();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
-    public void creerCommande(Commande c) {
-        if (c == null || c.getFournisseur() == null) {
+    public void creerCommande(CommandeDetail cd) {
+        if (cd == null || cd.getMedicament() == null || cd.getCommande() == null || cd.getQuantite() <= 0) {
+            throw new IllegalArgumentException("Erreur de Commande");
+        }
+
+        if (cd.getCommande() == null || cd.getCommande().getFournisseur() == null) {
             throw new IllegalArgumentException("La commande et le fournisseur sont obligatoires");
         }
-        
-        if (c.getMontant() <= 0) {
-            throw new IllegalArgumentException("Le montant doit être positif");
+
+        CommandeDetailDAO cdDAO = new CommandeDetailDAO();
+        commandeDAO cDAO = new commandeDAO();
+        try {
+            cDAO.ajouterCommande(cd.getCommande());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        
-        c.setId(nextId++);
-        c.setDate(LocalDate.now());
-        c.setStatut(StatutCommande.EN_COURS);
-        commandes.add(c);
+        try {
+            cdDAO.ajouterCommandeDetail(cd);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
-    public void modifierCommande(Commande c) {
-        if (c == null || c.getId() <= 0) {
-            throw new IllegalArgumentException("Commande invalide");
-        }
-        
-        Commande existing = consulterCommande(c.getId());
-        if (existing == null) {
-            throw new IllegalArgumentException("Commande avec l'ID " + c.getId() + " non trouvée");
-        }
-        
-        // On ne peut modifier que les commandes EN_COURS
-        if (existing.getStatut() != StatutCommande.EN_COURS) {
-            throw new IllegalArgumentException("On ne peut modifier que les commandes en cours");
-        }
-        
-        existing.setFournisseur(c.getFournisseur());
-        existing.setEmploye(c.getEmploye());
-        existing.setMontant(c.getMontant());
-        existing.setDetails(c.getDetails());
-    }
 
-    public void annulerCommande(int commandeId) {
-        Commande commande = consulterCommande(commandeId);
-        if (commande == null) {
+    public void annulerCommande(int commandeId) throws SQLException {
+        commandeDAO cDAO = new commandeDAO();
+        CommandeDetail cd = consulterCommande(commandeId);
+        if (cd == null) {
             throw new IllegalArgumentException("Commande avec l'ID " + commandeId + " non trouvée");
         }
         
-        if (commande.getStatut() == StatutCommande.RECEPTIONNEE) {
-            throw new IllegalArgumentException("On ne peut pas annuler une commande déjà réceptionnée");
-        }
-        
-        commande.setStatut(StatutCommande.ANNULEE);
+        cDAO.setStatusById(cd.getCommande().getId(), StatutCommande.annulee);
     }
 
-    public void recevoirCommande(int commandeId) {
-        Commande commande = consulterCommande(commandeId);
-        if (commande == null) {
+    public void recevoirCommande(int commandeId) throws SQLException {
+        CommandeDetail cd = consulterCommande(commandeId);
+        commandeDAO cDAO = new commandeDAO();
+        if (cd == null) {
             throw new IllegalArgumentException("Commande avec l'ID " + commandeId + " non trouvée");
         }
-        
-        if (commande.getStatut() != StatutCommande.VALIDEE) {
-            throw new IllegalArgumentException("Seules les commandes validées peuvent être réceptionnées");
-        }
-        
-        commande.setStatut(StatutCommande.RECEPTIONNEE);
+
+        cDAO.setStatusById(cd.getCommande().getId(), StatutCommande.livree);
     }
 
-    public void validerCommande(int commandeId) {
-        Commande commande = consulterCommande(commandeId);
-        if (commande == null) {
+    public void validerCommande(int commandeId) throws SQLException {
+        CommandeDetail cd = consulterCommande(commandeId);
+        commandeDAO cDAO = new commandeDAO();
+        if (cd == null) {
             throw new IllegalArgumentException("Commande avec l'ID " + commandeId + " non trouvée");
         }
-        
-        if (commande.getStatut() != StatutCommande.EN_COURS) {
-            throw new IllegalArgumentException("Seules les commandes en cours peuvent être validées");
-        }
-        
-        commande.setStatut(StatutCommande.VALIDEE);
+        cDAO.setStatusById(cd.getCommande().getId(), StatutCommande.livree);
     }
 
-    public Commande consulterCommande(int commandeId) {
-        for (Commande commande : commandes) {
-            if (commande.getId() == commandeId) {
+    public CommandeDetail consulterCommande(int commandeId) {
+        for (CommandeDetail commande : commandes) {
+            if (commande.getCommande().getId() == commandeId) {
                 return commande;
             }
         }
         return null;
     }
 
-    public List<Commande> listerCommandes() {
+    public List<CommandeDetail> listerCommandes() {
         return new ArrayList<>(commandes);
     }
 
-    public List<Commande> listerCommandesParStatut(StatutCommande statut) {
-        List<Commande> results = new ArrayList<>();
-        for (Commande commande : commandes) {
-            if (commande.getStatut() == statut) {
-                results.add(commande);
+    public List<CommandeDetail> listerCommandesParStatut(StatutCommande statut) {
+        List<CommandeDetail> results = new ArrayList<>();
+        commandeDAO cDAO = new commandeDAO();
+
+        for (CommandeDetail cd : commandes) {
+            try {
+                if (cDAO.getStatusById(cd.getCommande().getId()) == statut) {
+                    results.add(cd);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
         return results;
     }
 
-    public List<Commande> listerCommandesParFournisseur(int fournisseurId) {
-        List<Commande> results = new ArrayList<>();
-        for (Commande commande : commandes) {
-            if (commande.getFournisseur() != null && commande.getFournisseur().getId() == fournisseurId) {
-                results.add(commande);
-            }
-        }
-        return results;
-    }
 
     public double calculerMontantTotal() {
         double total = 0;
-        for (Commande commande : commandes) {
-            total += commande.getMontant();
+        CommandeDetailDAO cdDAO = new CommandeDetailDAO();
+        MedicamentDAO mdDAO = new MedicamentDAO();
+        try {
+            commandes = cdDAO.getAllCommandeDetails();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        for (CommandeDetail commande : commandes) {
+            try {
+                total += mdDAO.getPrixById(commande.getMedicament().getId()) * commande.getQuantite();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         return total;
     }

@@ -1,9 +1,18 @@
 package tn.univ.pharmacie.model;
 
 public class CommandeDetail {
+    private int id;
     private Commande commande;
     private Medicament medicament;
     private int quantite;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Commande getCommande() {
         return commande;

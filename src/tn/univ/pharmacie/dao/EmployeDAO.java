@@ -99,8 +99,6 @@ public class EmployeDAO {
                 emp.setPrenom(rs.getString("prenom"));
                 emp.setUsername(rs.getString("username"));
                 emp.setPassword(rs.getString("password"));
-                //valueOf convertit la chaîne de la base en enum
-                //il faut assurer que la premier letre de role est seulement en maj (valueof sensible a la case)
                 String roleStr = rs.getString("role").trim();
                 roleStr = roleStr.substring(0,1).toUpperCase() + roleStr.substring(1).toLowerCase();
                 emp.setRole(Employe.EmployeRole.valueOf(roleStr));
@@ -110,12 +108,12 @@ public class EmployeDAO {
         return employes;
     }
 
-    public Employe getEmployeByUsername(String username) throws SQLException {
-        String sql = "SELECT * FROM employe WHERE username=?";
+    public Employe getEById(int id) throws SQLException {
+        String sql = "SELECT * FROM employe WHERE id=?";
         try (Connection conn = ConnexionBD.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)){
 
-            stmt.setString(1, username);
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -125,16 +123,13 @@ public class EmployeDAO {
                 emp.setPrenom(rs.getString("prenom"));
                 emp.setUsername(rs.getString("username"));
                 emp.setPassword(rs.getString("password"));
-
-                // Normaliser le rôle
                 String roleStr = rs.getString("role").trim();
                 roleStr = roleStr.substring(0,1).toUpperCase() + roleStr.substring(1).toLowerCase();
                 emp.setRole(Employe.EmployeRole.valueOf(roleStr));
-
                 return emp;
             }
         }
-        return null; // pas trouvé
+        return null;
     }
 
 

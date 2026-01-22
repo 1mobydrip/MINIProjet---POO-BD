@@ -80,4 +80,26 @@ public class FournisseurDAO {
 
             stmt.executeUpdate();
         }
-    }}
+    }
+
+    public Fournisseur getFById(int id) throws SQLException {
+        String sql = "SELECT * FROM fournisseur WHERE id=?";
+        try (Connection conn = ConnexionBD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Fournisseur f = new Fournisseur();
+                f.setId(rs.getInt("id"));
+                f.setNom(rs.getString("nom"));
+                f.setTelephone(rs.getInt("telephone"));
+                f.setAdresse(rs.getString("adresse"));
+                return f;
+            }
+        }
+        return null;
+    }
+}
+
